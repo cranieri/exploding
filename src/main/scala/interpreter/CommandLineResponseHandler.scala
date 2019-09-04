@@ -1,22 +1,21 @@
 package interpreter
 
 import algebra.CommandLineResponseHandlerAlg
-import domain.{GameError, Quit}
+import domain.{BasicRouletteRuse, DefuseCards, GameError, GameType, Quit}
 
 object CommandLineResponseHandler extends CommandLineResponseHandlerAlg {
   def handleResponse(r: String): Either[GameError, String] = {
-    if (r == "d") {
-      Right(r)
-    } else {
-      Left(Quit)
+    r match {
+      case "d" => Right(r)
+      case _ => Left(Quit)
     }
   }
 
-  def handleResponseGameType(r: String): Either[GameError, String] = {
-    if (r == "1" || r == "2") {
-      Right(r)
-    } else {
-      Left(Quit)
+  def handleResponseGameType(r: String): Either[GameError, GameType] = {
+    r match {
+      case "1" => Right(BasicRouletteRuse)
+      case "2" => Right(DefuseCards)
+      case _ => Left(Quit)
     }
   }
 }
