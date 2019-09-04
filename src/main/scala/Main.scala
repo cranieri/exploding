@@ -1,5 +1,4 @@
 import cats.effect.{ExitCode, IO, IOApp}
-import domain.{Blank, Card, Deck, Defuse, Explosive, GameType}
 import interpreter.GameTypeChooser
 import program.Game
 

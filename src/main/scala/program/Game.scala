@@ -15,7 +15,7 @@ object Game {
         n <- EitherT.right(Sync[F].delay(scala.io.StdIn.readLine))
         _ <- EitherT(Sync[F].pure(CommandLineResponseHandler.handleResponse(n)))
         c <- EitherT(Sync[F].pure(CardDrawer.draw(deck)))
-        d <- EitherT(Sync[F].pure(CardChecker(gameType).check(c._1, playerCard, c._2, gameType)))
+        d <- EitherT(Sync[F].pure(CardChecker(gameType).check(c._1, playerCard, c._2)))
         p <- playGame(d._1, d._2)
       } yield p
     }

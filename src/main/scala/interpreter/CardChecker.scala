@@ -4,7 +4,7 @@ import algebra.CardCheckerAlg
 import domain.{BasicRouletteRuse, Card, Deck, DefuseCards, GameError, GameType}
 
 trait CardChecker extends CardCheckerAlg {
-  def check(card: Card, playerCard: Option[Card], deck: Deck, gameType: GameType): Either[GameError, (Deck, Option[Card])] = ???
+  def check(card: Card, playerCard: Option[Card], deck: Deck): Either[GameError, (Deck, Option[Card])] = ???
 }
 
 object CardChecker extends CardChecker {
