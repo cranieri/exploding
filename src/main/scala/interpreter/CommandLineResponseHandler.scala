@@ -11,4 +11,12 @@ object CommandLineResponseHandler extends CommandLineResponseHandlerAlg {
       Left(Quit)
     }
   }
+
+  def handleResponseGameType(r: String): Either[GameError, String] = {
+    if (r == "1" || r == "2") {
+      Right(r)
+    } else {
+      Left(Quit)
+    }
+  }
 }

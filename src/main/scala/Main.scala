@@ -1,6 +1,6 @@
 import cats.effect.{ExitCode, IO, IOApp}
-import domain.{Blank, Card, Deck, Defuse, Explosive}
-import interpreter.Game
+import domain.{Blank, Card, Deck, Defuse, Explosive, GameType}
+import interpreter.{Game, GameTypeChooser}
 
 object Main extends IOApp {
 
@@ -12,7 +12,12 @@ object Main extends IOApp {
 
     val deck = Deck(cards)
 
-    Game.play[IO](deck, playerCard).value.map {
+    val play = for {
+      t <- GameTypeChooser.choose[IO]
+      p <- Game.play[IO](deck, playerCard, t)
+    } yield p
+
+    play.value.map {
       case Right(_) => ExitCode.Success
       case _ => ExitCode(0)
     }
