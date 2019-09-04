@@ -1,0 +1,10 @@
+.idea/
+.ideavimrc
+.bloop/
+.metals/
+deployment/data
+project/project
+project/target
+project/.bloop/
+target/
+
