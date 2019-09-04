@@ -8,9 +8,8 @@ object DefuseCardsCardChecker extends CardChecker {
     card match {
       case _: Explosive.type => {
         playerCard match {
-          case Some(_: Defuse.type) if (gameType == DefuseCards) => Right(Deck(util.Random.shuffle(deck.cards :+ card)), None)
-          case _ if (gameType == DefuseCards) => Left(Quit)
-          case _ => Left(Exploded)
+          case Some(_: Defuse.type) => Right(Deck(util.Random.shuffle(deck.cards :+ card)), None)
+          case _ => Left(Quit)
         }
       }
       case _ => Right(deck, playerCard)
