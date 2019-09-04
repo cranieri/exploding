@@ -6,8 +6,8 @@ import cats.effect.Effect
 import domain.{Card, Deck, GameError}
 
 object Game extends GameAlg {
-  def play[F[_] : Effect](deck: Deck, playerCard: Option[Card.Value]): EitherT[F, GameError, (Card.Value, Deck)] = {
-    def playGame(deck: Deck, playerCard: Option[Card.Value]): EitherT[F, GameError, (Card.Value, Deck)] = {
+  def play[F[_] : Effect](deck: Deck, playerCard: Option[Card]): EitherT[F, GameError, (Card, Deck)] = {
+    def playGame(deck: Deck, playerCard: Option[Card]): EitherT[F, GameError, (Card, Deck)] = {
       val game = Player.playHand[F](deck, playerCard)
 
       for {

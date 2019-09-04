@@ -6,7 +6,7 @@ import cats.effect.{Effect, Sync}
 import domain.{Card, Deck, GameError}
 
 object Player extends PlayerAlg {
-  def playHand[F[_] : Effect](deck: Deck, playerCard: Option[Card.Value]): EitherT[F, GameError, (Deck, Option[Card.Value])] = {
+  def playHand[F[_] : Effect](deck: Deck, playerCard: Option[Card]): EitherT[F, GameError, (Deck, Option[Card])] = {
     for {
       _ <- EitherT.right(Sync[F].delay(println("Press 'd' to draw a card (q to exit): ")))
       n <- EitherT.right(Sync[F].delay(scala.io.StdIn.readLine))

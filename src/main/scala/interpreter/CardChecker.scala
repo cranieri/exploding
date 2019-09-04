@@ -1,15 +1,15 @@
 package interpreter
 
 import algebra.CardCheckerAlg
-import domain.{Card, Deck, Exploded, GameError}
+import domain.{Card, Deck, Defuse, Exploded, Explosive, GameError}
 
 object CardChecker extends CardCheckerAlg {
-  def check(card: Card.Value, playerCard: Option[Card.Value], deck: Deck): Either[GameError, (Deck, Option[Card.Value])] = {
+  def check(card: Card, playerCard: Option[Card], deck: Deck): Either[GameError, (Deck, Option[Card])] = {
     println(card)
     card match {
-      case e if e.equals(Card.Explosive) => {
+      case e: Explosive.type => {
         playerCard match {
-          case Some(c) if c == Card.Defuse => Right(Deck(util.Random.shuffle(deck.cards :+ card)), None)
+          case Some(c: Defuse.type) => Right(Deck(util.Random.shuffle(deck.cards :+ card)), None)
           case _ => Left(Exploded)
         }
       }

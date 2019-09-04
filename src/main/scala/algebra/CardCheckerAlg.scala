@@ -3,5 +3,5 @@ package algebra
 import domain.{Card, Deck, GameError}
 
 trait CardCheckerAlg {
-  def check(card: Card.Value, playerCard: Option[Card.Value], deck: Deck): Either[GameError, (Deck, Option[Card.Value])]
+  def check(card: Card, playerCard: Option[Card], deck: Deck): Either[GameError, (Deck, Option[Card])]
 }

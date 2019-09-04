@@ -5,5 +5,5 @@ import cats.effect.Effect
 import domain.{Card, Deck, GameError}
 
 trait GameAlg {
-  def play[F[_] : Effect](deck: Deck, playerCard: Option[Card.Value]): EitherT[F, GameError, (Card.Value, Deck)]
+  def play[F[_] : Effect](deck: Deck, playerCard: Option[Card]): EitherT[F, GameError, (Card, Deck)]
 }

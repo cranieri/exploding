@@ -1,14 +1,14 @@
 import cats.effect.{ExitCode, IO, IOApp}
-import domain.{Card, Deck}
+import domain.{Blank, Card, Deck, Defuse, Explosive}
 import interpreter.Game
 
 object Main extends IOApp {
 
   def run(args: List[String]): IO[ExitCode] = {
 
-    val playerCard: Option[Card.Value] = Some(Card.Defuse)
+    val playerCard: Option[Card] = Some(Defuse)
 
-    val cards = util.Random.shuffle((List.fill(5)(Card.Blank) ::: List.fill(2)(Card.Defuse)) :+ Card.Explosive)
+    val cards = util.Random.shuffle((List.fill(5)(Blank) ::: List.fill(2)(Defuse)) :+ Explosive)
 
     val deck = Deck(cards)
 

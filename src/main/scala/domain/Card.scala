@@ -1,5 +1,7 @@
 package domain
 
-object Card extends Enumeration {
-  val Blank, Explosive, Defuse = Value
-}
+trait Card
+
+case object Blank extends Card
+case object Explosive extends Card
+case object Defuse extends Card
