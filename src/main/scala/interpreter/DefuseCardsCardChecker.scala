@@ -1,18 +1,36 @@
 package interpreter
 
+import cats.data.EitherT
+import cats.effect.{Effect, Sync}
 import domain._
 
 object DefuseCardsCardChecker extends CardChecker {
-  override def check(card: Card, playerCard: Option[Card], deck: Deck): Either[GameError, (Deck, Option[Card])] = {
-    println(card)
+  override def check[F[_]: Effect](card: Card, playerCard: Option[Card], deck: Deck): EitherT[F, GameExit, (Deck, Option[Card])] = {
     card match {
       case _: Explosive.type => {
         playerCard match {
-          case Some(_: Defuse.type) => Right(Deck(util.Random.shuffle(deck.cards :+ card)), None)
-          case _ => Left(Quit)
+          case Some(_: Defuse.type) => {
+            for {
+              _ <- EitherT.right(Sync[F].delay(println(s"You drew an Explosive card but you have a Defuse. Carry on playing!")))
+              m <- EitherT[F, GameExit, (Deck, Option[Card])](Sync[F].pure(Right(Deck(util.Random.shuffle(deck.cards :+ card)), None)))
+            } yield m
+          }
+          case None => {
+            for {
+              _ <- EitherT.right(Sync[F].delay(println(s"Sorry, no more Defuses. You exploded!")))
+              m <- EitherT[F, GameExit, (Deck, Option[Card])] (Sync[F].pure(Left(Quit)))
+            } yield m
+          }
         }
       }
-      case _ => Right(deck, playerCard)
+      case _: Defuse.type => for {
+        _ <- EitherT.right(Sync[F].delay(println(s"You drew a Defuse. Carry on playing!")))
+        m <- EitherT[F, GameExit, (Deck, Option[Card])] (Sync[F].pure(Right(deck, playerCard)))
+      } yield m
+      case _: Blank.type => for {
+        _ <- EitherT.right(Sync[F].delay(println(s"Turn finished")))
+        m <- EitherT[F, GameExit, (Deck, Option[Card])] (Sync[F].pure(Left(Quit)))
+      } yield m
     }
   }
 }

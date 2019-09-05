@@ -3,8 +3,8 @@ package interpreter
 import algebra.ConsoleAlg
 import cats.effect.{Effect, Sync}
 
-object Console extends ConsoleAlg {
+object PureConsole extends ConsoleAlg {
 
-  def putStrLn[F[_]: Effect](s:String): Unit = Sync[F].delay(println("Press 'd' to draw a card (any other key to exit): "))
-  def readLn[F[_]: Effect]: Unit = Sync[F].delay(scala.io.StdIn.readLine)
+  def putStrLn[F[_]: Effect](s:String): F[Unit] = Sync[F].delay(println(s))
+  def readLn[F[_]: Effect]: F[String] = Sync[F].delay(scala.io.StdIn.readLine)
 }

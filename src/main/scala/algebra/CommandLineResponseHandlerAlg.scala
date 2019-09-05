@@ -1,8 +1,8 @@
 package algebra
 
-import domain.{GameError, GameType}
+import domain.{GameExit, GameType}
 
 trait CommandLineResponseHandlerAlg {
-  def handleResponse(r: String): Either[GameError, String]
-  def handleResponseGameType(r: String): Either[GameError, GameType]
+  def handleResponse(r: String): Either[GameExit, String]
+  def handleResponseGameType(r: String): Either[GameExit, GameType]
 }

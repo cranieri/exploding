@@ -1,9 +1,9 @@
 package domain
 
-sealed trait GameError
+sealed trait GameExit
 
-case object Exploded extends GameError
+case object Exploded extends GameExit
 
-case object DrawError extends GameError
+case object DrawExit extends GameExit
 
-case object Quit extends GameError
+case object Quit extends GameExit

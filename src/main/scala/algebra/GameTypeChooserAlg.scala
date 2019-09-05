@@ -2,8 +2,8 @@ package algebra
 
 import cats.data.EitherT
 import cats.effect.{Effect, Sync}
-import domain.{GameError, GameType}
+import domain.{GameExit, GameType}
 
 trait GameTypeChooserAlg {
-  def choose[F[_]: Sync]: EitherT[F, GameError, GameType]
+  def choose[F[_]: Sync]: EitherT[F, GameExit, GameType]
 }
