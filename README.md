@@ -36,3 +36,8 @@ You will probably have questions about the requirements. For this exercise, plea
 ```
 sbt run
 ```
+
+* Then choose the type of game you want to play, after the following message is shown:
+```
+Press '1' to play Basic Roulette Ruse, '2' to play Defuse Cards (q to exit):
+```
