@@ -29,3 +29,10 @@ You will probably have questions about the requirements. For this exercise, plea
         2. Return the explosive card to the draw pile.
         3. Re-shuffle the draw pile.
       * Explosive card, if the player does not have a defuse card: The player loses.
+      
+      
+### Running the application
+* Execute the following command to start the application via sbt:
+```
+sbt run
+```
