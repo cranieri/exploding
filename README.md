@@ -16,4 +16,4 @@ Press '1' to play Basic Roulette Ruse, '2' to play Defuse Cards (q to exit):
 
 ### Areas of improvements
 - Add unit tests
-- Add support for multiple players and ake application configurable (cards in a deck, number of players etc)
+- Add support for multiple players and make application configurable (cards in a deck, number of players etc)
