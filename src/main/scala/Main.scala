@@ -1,5 +1,5 @@
-import cats.effect.{ExitCode, IO, IOApp}
-import interpreter.{GameTypeChooser, PureConsole}
+import cats.effect.{ ExitCode, IO, IOApp }
+import interpreter.{ GameTypeChooser, PureConsole }
 import program.Game
 
 object Main extends IOApp {
@@ -12,12 +12,7 @@ object Main extends IOApp {
 
     play.value.map {
       case Right(_) => ExitCode.Success
-      case _ => ExitCode(0)
+      case _        => ExitCode(0)
     }
   }
 }
-
-
-
-
-

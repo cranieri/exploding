@@ -1,6 +1,6 @@
 package algebra
 
-import domain.{GameExit, GameType}
+import domain.{ GameExit, GameType }
 
 trait CommandLineResponseHandlerAlg {
   def handleResponse(r: String): Either[GameExit, String]
