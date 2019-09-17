@@ -1,41 +1,72 @@
 package program
 
-import algebra.ConsoleAlg
-import cats.Id
-import cats.effect.{Effect, IO, Sync}
-import domain.Quit
-import org.scalatest.Matchers
-//import cats.effect.{Effect, IO, Sync}
-import cats.implicits._
-import domain.BasicRouletteRuse
-import interpreter.PureConsole
-import org.scalatest.FunSpec
+import algebra.{ CardDrawerAlg, ConsoleAlg }
+import cats.effect.{ IO, Sync }
+import domain.{ BasicRouletteRuse, Blank, Deck, DefuseCards, DrawExit, Exploded, Explosive }
+import interpreter.{ BasicRouletteRuseCardChecker, CardDrawer }
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.{ FunSpec, Matchers }
 
-class GameTest extends FunSpec with MockFactory with Matchers {
-  describe("Game#play") {
-    it("allows drawing cards until the user presses a key different than 'd'") {
+class GameTest extends FunSpec with Matchers with MockFactory {
 
-      val g = Game.play[IO](BasicRouletteRuse, ConsoleMock)
+  private val cardDrawer = mock[CardDrawerAlg]
 
-      val res = g.value.unsafeRunSync()
+  describe("Basic roulette ruse") {
+    describe("when an explosive card is drawn") {
+      it("explodes and game exits") {
+        val game = new Game(
+          BasicRouletteRuse(List(Explosive)),
+          ConsoleTest,
+          CardDrawer,
+          BasicRouletteRuseCardChecker
+        )
+        val g = game.play[IO]
 
-      res shouldBe Left(Quit)
+        g.value.unsafeRunSync() shouldBe Left(Exploded)
+      }
+    }
+
+    describe("when a blank card is drawn") {
+      it("has no effects, the card is discarded") {
+
+        cardDrawer.draw _ expects (Deck(List(Blank, Blank))) returns Right(
+          Blank,
+          Deck(List.fill(1)(Blank))
+        ) once ()
+        cardDrawer.draw _ expects (Deck(List(Blank))) returns Right(Blank, Deck(List())) once ()
+        cardDrawer.draw _ expects (Deck(List())) returns Left(DrawExit) once ()
+        val game = new Game(
+          BasicRouletteRuse(List(Blank, Blank)),
+          ConsoleTest,
+          cardDrawer,
+          BasicRouletteRuseCardChecker
+        )
+        game.play[IO].value.unsafeRunSync()
+      }
+    }
+  }
+
+  describe("Defuse cards") {
+    describe("when an explosive card is drawn") {
+      it("discards the player's defuse card") {
+        val game = new Game(
+          DefuseCards(List(Explosive)),
+          ConsoleTest,
+          CardDrawer,
+          BasicRouletteRuseCardChecker
+        )
+        val g = game.play[IO]
+
+        g.value.unsafeRunSync() shouldBe Left(Exploded)
+      }
     }
   }
 }
 
+object ConsoleTest extends ConsoleAlg {
+  def putStrLn[F[_]: Sync](s: String): F[Unit] =
+    Sync[F].delay(println(s))
 
-object ConsoleMock extends ConsoleAlg {
-  var counter = 1
-
-  def putStrLn[F[_] : Effect](s: String): F[Unit] = Sync[F].delay(println(s))
-
-  def readLn[F[_] : Effect]: F[String] = {
-    if (counter == 1) {
-      counter = counter + 1
-      Sync[F].delay("d")
-    } else Sync[F].delay("q")
-  }
+  def readLn[F[_]: Sync]: F[String] =
+    Sync[F].delay("d")
 }
-

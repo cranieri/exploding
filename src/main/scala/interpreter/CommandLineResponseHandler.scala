@@ -12,8 +12,8 @@ object CommandLineResponseHandler extends CommandLineResponseHandlerAlg {
 
   def handleResponseGameType(r: String): Either[GameExit, GameType] =
     r match {
-      case "1" => Right(BasicRouletteRuse)
-      case "2" => Right(DefuseCards)
+      case "1" => Right(BasicRouletteRuse())
+      case "2" => Right(DefuseCards())
       case _   => Left(Quit)
     }
 }

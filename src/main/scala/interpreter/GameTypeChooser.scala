@@ -2,7 +2,7 @@ package interpreter
 
 import algebra.GameTypeChooserAlg
 import cats.data.EitherT
-import cats.effect.{ Sync }
+import cats.effect.Sync
 import domain.{ GameExit, GameType }
 import cats.implicits._
 

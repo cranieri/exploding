@@ -2,12 +2,12 @@ package algebra
 
 import cats.data.EitherT
 import cats.effect.Sync
-import domain.{ Card, Deck, Defuse, GameExit }
+import domain.{ Card, Deck, GameExit }
 
 trait CardCheckerAlg {
   def check[F[_]: Sync](
       card: Card,
-      playerCard: Option[Defuse.type],
+      playerCard: Option[Card],
       deck: Deck
-  ): EitherT[F, GameExit, (Deck, Option[Defuse.type])]
+  ): EitherT[F, GameExit, (Deck, Option[Card])]
 }
