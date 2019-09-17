@@ -1,5 +1,5 @@
 import cats.effect.{ ExitCode, IO, IOApp }
-import interpreter.{ CardChecker, CardDrawer, GameTypeChooser, PureConsole }
+import interpreter.{ CardDrawer, GameTypeChooser, PureConsole }
 import program.Game
 
 object Main extends IOApp {
@@ -7,7 +7,7 @@ object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] = {
     val play = for {
       t <- GameTypeChooser.choose[IO]
-      p <- new Game(t, PureConsole, CardDrawer, CardChecker[IO](t)).play[IO]
+      p <- new Game(t, PureConsole, CardDrawer).play[IO]
     } yield p
 
     play.value.map {

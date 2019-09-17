@@ -3,7 +3,7 @@ package program
 import algebra.{ CardDrawerAlg, ConsoleAlg }
 import cats.effect.{ IO, Sync }
 import domain.{ BasicRouletteRuse, Blank, Deck, DefuseCards, DrawExit, Exploded, Explosive }
-import interpreter.{ BasicRouletteRuseCardChecker, CardDrawer }
+import interpreter.CardDrawer
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FunSpec, Matchers }
 
@@ -17,8 +17,7 @@ class GameTest extends FunSpec with Matchers with MockFactory {
         val game = new Game(
           BasicRouletteRuse(List(Explosive)),
           ConsoleTest,
-          CardDrawer,
-          BasicRouletteRuseCardChecker
+          CardDrawer
         )
         val g = game.play[IO]
 
@@ -38,8 +37,7 @@ class GameTest extends FunSpec with Matchers with MockFactory {
         val game = new Game(
           BasicRouletteRuse(List(Blank, Blank)),
           ConsoleTest,
-          cardDrawer,
-          BasicRouletteRuseCardChecker
+          cardDrawer
         )
         game.play[IO].value.unsafeRunSync()
       }
@@ -54,8 +52,7 @@ class GameTest extends FunSpec with Matchers with MockFactory {
         val game = new Game(
           DefuseCards(List(Explosive)),
           ConsoleTest,
-          cardDrawer,
-          BasicRouletteRuseCardChecker
+          cardDrawer
         )
         game.play[IO].value.unsafeRunSync()
       }

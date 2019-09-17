@@ -1,6 +1,6 @@
 package program
 
-import algebra.{ CardCheckerAlg, CardDrawerAlg, ConsoleAlg }
+import algebra.{ CardDrawerAlg, ConsoleAlg }
 import cats.data.EitherT
 import cats.effect.{ Effect, Sync }
 import domain.{ Card, Deck, GameExit, GameType }
@@ -9,8 +9,7 @@ import interpreter.{ CommandLineResponseHandler }
 class Game(
     gameType: GameType,
     console: ConsoleAlg,
-    cardDrawer: CardDrawerAlg,
-    cardChecker: CardCheckerAlg
+    cardDrawer: CardDrawerAlg
 ) {
   def play[F[_]: Effect]: EitherT[F, GameExit, (Card, Deck)] = {
     def playGame(deck: Deck, playerCard: Option[Card]): EitherT[F, GameExit, (Card, Deck)] =
@@ -21,7 +20,7 @@ class Game(
         n <- EitherT.right(console.readLn[F])
         _ <- EitherT(Sync[F].pure(CommandLineResponseHandler.handleResponse(n)))
         c <- EitherT(Sync[F].pure(cardDrawer.draw(deck)))
-        d <- cardChecker.check(c._1, playerCard, c._2)
+        d <- gameType.check(c._1, playerCard, c._2)
         p <- playGame(d._1, d._2)
       } yield p
 
