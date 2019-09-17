@@ -49,15 +49,15 @@ class GameTest extends FunSpec with Matchers with MockFactory {
   describe("Defuse cards") {
     describe("when an explosive card is drawn") {
       it("discards the player's defuse card") {
+        cardDrawer.draw _ expects (*) returns Left(Exploded) once ()
+
         val game = new Game(
           DefuseCards(List(Explosive)),
           ConsoleTest,
-          CardDrawer,
+          cardDrawer,
           BasicRouletteRuseCardChecker
         )
-        val g = game.play[IO]
-
-        g.value.unsafeRunSync() shouldBe Left(Exploded)
+        game.play[IO].value.unsafeRunSync()
       }
     }
   }
