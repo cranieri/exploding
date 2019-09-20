@@ -34,6 +34,11 @@ Press '1' to play Basic Roulette Ruse, '2' to play Defuse Cards (q to exit):
         3. Re-shuffle the draw pile.
       * Explosive card, if the player does not have a defuse card: The player loses.
 
+### Tests
+- Test have been written with scalatest (http://www.scalatest.org/) and can be run with following commad:
+```
+sbt test
+```
 
 ### Libraries used
 - Cats (https://typelevel.org/cats/)
