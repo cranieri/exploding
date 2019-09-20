@@ -1,6 +1,6 @@
 ## Explosive
 The code in this repo implements the "explosive" game by following the principles of the Tagless Final design pattern, which is one of the most common functional programming design pattern used in Scala. 
-The idea behind the design of the application is to keep the core pure and execute side effects in the outer layer of the application, "at the end of the world". That means that the side effects are performed only in the Main object.
+The idea behind the design of the application is to keep the core pure and execute side effects in the outer layer of the application, "at the end of the world". That means that the side effects are performed only in the Main object. Immutability and referential transparency are also part of the design principles followed while implementing the application.
       
 ### Running the application
 * Execute the following command to start the application via sbt:
