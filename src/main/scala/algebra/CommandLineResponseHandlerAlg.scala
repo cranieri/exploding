@@ -1,8 +1,7 @@
 package algebra
 
-import domain.{ GameExit, GameType }
+import domain.{ GameExit }
 
-trait CommandLineResponseHandlerAlg {
+trait CommandLineResponseHandlerAlg[F[_]] {
   def handleResponse(r: String): Either[GameExit, String]
-  def handleResponseGameType(r: String): Either[GameExit, GameType]
 }

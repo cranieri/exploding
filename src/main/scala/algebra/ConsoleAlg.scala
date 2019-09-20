@@ -1,9 +1,7 @@
 package algebra
 
-import cats.effect.Sync
+trait ConsoleAlg[F[_]] {
+  def putStrLn(s: String): F[Unit]
 
-trait ConsoleAlg {
-  def putStrLn[F[_]: Sync](s: String): F[Unit]
-
-  def readLn[F[_]: Sync]: F[String]
+  def readLn: F[String]
 }

@@ -1,26 +1,28 @@
 package domain
 
+import algebra.{ ConsoleAlg, RandomizerAlg }
 import cats.data.EitherT
 import cats.effect.Sync
+import interpreter.Randomizer
 
-sealed trait GameType {
-  val deck: Deck
+trait GameType[F[_]] {
   val playerCard: Option[Card]
+  val deck: Deck
 
-  def check[F[_]: Sync](
+  def check(
       card: Card,
       playerCard: Option[Card],
       deck: Deck
   ): EitherT[F, GameExit, (Deck, Option[Card])]
 }
 
-case class BasicRouletteRuse(
-    cards: List[Card] = util.Random.shuffle(List.fill(46)(Blank) :+ Explosive)
-) extends GameType {
-  val deck: Deck               = Deck(cards)
-  val playerCard: Option[Card] = None
+case class BasicRouletteRuse[F[_]: Sync](
+    console: ConsoleAlg[F],
+    deck: Deck,
+    playerCard: Option[Card]
+) extends GameType[F] {
 
-  def check[F[_]: Sync](
+  def check(
       card: Card,
       playerCard: Option[Card],
       deck: Deck
@@ -28,13 +30,13 @@ case class BasicRouletteRuse(
     card match {
       case _: Explosive.type =>
         for {
-          _ <- EitherT.right(Sync[F].delay(println(s"Sorry! You drew a $card card. You exploded!")))
+          _ <- EitherT.right(console.putStrLn(s"Sorry! You drew a $card card. You exploded!"))
           m <- EitherT[F, GameExit, (Deck, Option[Card])](Sync[F].pure(Left(Exploded)))
         } yield m
       case _ =>
         for {
           _ <- EitherT.right(
-                Sync[F].delay(println(s"Well done! You drew a $card card. Keep drawing"))
+                Sync[F].delay(console.putStrLn(s"Well done! You drew a $card card. Keep drawing"))
               )
           m <- EitherT[F, GameExit, (Deck, Option[Card])](
                 Sync[F].pure(Right(deck, playerCard))
@@ -43,14 +45,14 @@ case class BasicRouletteRuse(
     }
 }
 
-case class DefuseCards(
-    cards: List[Card] =
-      util.Random.shuffle((List.fill(46)(Blank) ::: List.fill(2)(Defuse)) :+ Explosive)
-) extends GameType {
-  val deck: Deck               = Deck(cards)
-  val playerCard: Option[Card] = Some(Defuse)
+case class DefuseCards[F[_]: Sync](
+    deck: Deck,
+    playerCard: Option[Card],
+    console: ConsoleAlg[F],
+    randomizer: RandomizerAlg = Randomizer
+) extends GameType[F] {
 
-  def check[F[_]: Sync](
+  def check(
       card: Card,
       playerCard: Option[Card],
       deck: Deck
@@ -61,32 +63,30 @@ case class DefuseCards(
           case Some(_) =>
             for {
               _ <- EitherT.right(
-                    Sync[F].delay(
-                      println(
-                        s"You drew an Explosive card but you have a Defuse. Carry on playing!"
-                      )
+                    console.putStrLn(
+                      s"You drew an Explosive card but you have a Defuse. Carry on playing!"
                     )
                   )
               m <- EitherT[F, GameExit, (Deck, Option[Card])](
-                    Sync[F].pure(Right(Deck(util.Random.shuffle(deck.cards :+ card)), None))
+                    Sync[F].pure(Right(randomizer.run(Deck(deck.cards :+ card)), None))
                   )
             } yield m
           case None =>
             for {
-              _ <- EitherT.right(Sync[F].delay(println(s"Sorry, no more Defuses. You exploded!")))
+              _ <- EitherT.right(console.putStrLn(s"Sorry, no more Defuses. You exploded!"))
               m <- EitherT[F, GameExit, (Deck, Option[Card])](Sync[F].pure(Left(Quit)))
             } yield m
         }
       case _: Defuse.type =>
         for {
-          _ <- EitherT.right(Sync[F].delay(println(s"You drew a Defuse. Carry on playing!")))
+          _ <- EitherT.right(console.putStrLn(s"You drew a Defuse. Carry on playing!"))
           m <- EitherT[F, GameExit, (Deck, Option[Card])](
                 Sync[F].pure(Right(deck, playerCard))
               )
         } yield m
       case _: Blank.type =>
         for {
-          _ <- EitherT.right(Sync[F].delay(println(s"Turn finished")))
+          _ <- EitherT.right(console.putStrLn(s"Turn finished"))
           m <- EitherT[F, GameExit, (Deck, Option[Card])](Sync[F].pure(Left(Quit)))
         } yield m
     }
