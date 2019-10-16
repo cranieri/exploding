@@ -5,7 +5,7 @@ import cats.data.EitherT
 import cats.effect.Sync
 import interpreter.Randomizer
 
-trait GameType[F[_]] {
+sealed trait GameType[F[_]] {
   val playerCard: Option[Card]
   val deck: Deck
 

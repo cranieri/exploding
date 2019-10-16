@@ -4,6 +4,7 @@ import cats.effect.{ IO, Sync }
 import domain.{ BasicRouletteRuse, Blank, Deck, Defuse, DefuseCards, Explosive }
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FunSpec, Matchers }
+import program.RandomizerTest
 
 class GameTypeChooserTest extends FunSpec with MockFactory with Matchers {
   private val console = mock[MockableConsole]

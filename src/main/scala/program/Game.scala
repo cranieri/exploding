@@ -20,7 +20,7 @@ class Game[F[_]: Effect](
             )
         n <- EitherT.right(console.readLn)
         _ <- EitherT(
-              Sync[F].pure(new CommandLineResponseHandler(console, randomizer).handleResponse(n))
+              Sync[F].pure(new CommandLineResponseHandler(console).handleResponse(n))
             )
         c <- EitherT(Sync[F].pure(cardDrawer.draw(deck)))
         d <- gameType.check(c._1, playerCard, c._2)

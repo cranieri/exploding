@@ -1,8 +1,7 @@
 package interpreter
 
-import algebra.{ RandomizerAlg }
 import cats.effect.{ IO, Sync }
-import domain.{ Deck, Quit }
+import domain.Quit
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FunSpec, Matchers }
 
@@ -11,7 +10,7 @@ class CommandLineResponseHandlerTest extends FunSpec with Matchers with MockFact
 
   class MockableConsole(implicit val io: Sync[IO]) extends PureConsole("readLn")
 
-  val clrh = new CommandLineResponseHandler(console, RandomizerTest)
+  val clrh = new CommandLineResponseHandler(console)
 
   describe("handleResponse") {
     describe("when 'd' is passed") {
@@ -26,8 +25,4 @@ class CommandLineResponseHandlerTest extends FunSpec with Matchers with MockFact
       }
     }
   }
-}
-
-object RandomizerTest extends RandomizerAlg {
-  def run(d: Deck): Deck = d
 }
